@@ -20,10 +20,15 @@ class countryMod(loader.Module):
     async def client_ready(self, client, db):
         self.client = client   
     async def countrycmd(self, message):
-        """Syntax: .country YOUR_COUNTRY"""
-        try:
-            countryname = utils.get_args(message)
+        """Syntax: .country YOUR_COUNTRY"""  
 
+        countryname = utils.get_args(message)
+
+        if not countryname:
+            await utils.answer(message, 'Please enter a country name.')
+            return
+
+        try:
             url = "https://restcountries-v1.p.rapidapi.com/name/" + countryname[0]
 
             headers = {
@@ -52,5 +57,7 @@ class countryMod(loader.Module):
                 await utils.answer(message, f'<code>Contry: {name}\nPhone Code: {phonecode[0]}\nCapital: {capital}\nAlternative Names: {altnamestrue}\nIts located in {region}\nPopulation: {ppl}\nArea: {area}\nTimezone: {timezonetrue}\nShares borders with: {borderstrue}\nUses {currency[0]} as their currency.</code>')
         except KeyError:
             await utils.answer(message, f'Country "<b>{countryname[0]}</b>" does not exist.')
+        except AttributeError:
+            await utils.answer(message, 'How did you end up here?')
         except:
             await utils.answer(message, 'Something went wrong, contact @KOTEMAN123 for a fix.')
